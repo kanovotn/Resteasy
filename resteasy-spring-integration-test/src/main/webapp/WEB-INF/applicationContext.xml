@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+   <bean id="simple" class="org.jboss.resteasy.spring.basic.SimpleResource"/>
+   <bean id="locating" class="org.jboss.resteasy.spring.basic.LocatingResource">
+      <constructor-arg ref="simple"/>
+   </bean>
+
+   <bean id="locatingAOP" class="org.jboss.resteasy.spring.aop.LocatingResource">
+      <constructor-arg ref="testService"/>
+      <constructor-arg ref="testServiceCGLIBProxy"/>
+      <constructor-arg ref="testServiceJDKProxy"/>
+   </bean>
+
+
+	<bean id="testService" class="org.jboss.resteasy.spring.aop.TestServiceImpl"/>
+
+	<bean id="adviceBean" class="org.jboss.resteasy.spring.aop.AdviceImpl" />
+
+	<bean id="testServiceJDKProxy"
+                class="org.springframework.aop.framework.ProxyFactoryBean">
+
+		<property name="target" ref="testService" />
+		<property name="proxyInterfaces" value="org.jboss.resteasy.spring.aop.AnnotatedTestService" />
+
+		<property name="interceptorNames">
+			<list>
+				<value>adviceBean</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="testServiceCGLIBProxy"
+                class="org.springframework.aop.framework.ProxyFactoryBean">
+
+		<property name="target" ref="testService" />
+		<property name="proxyTargetClass" value="true" />
+
+		<property name="interceptorNames">
+			<list>
+				<value>adviceBean</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>

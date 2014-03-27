@@ -108,6 +108,7 @@
         <module>resteasy-test-tjws-spring</module>
         <module>resteasy-spring</module>
         <module>resteasy-spring-jetty</module>
+        <module>resteasy-spring-integration-test</module>
         <module>resteasy-jsapi</module>
         <!-- <module>resteasy-jsapi-testing</module> --><!-- not included in upstream -->
         <module>resteasy-cdi</module>

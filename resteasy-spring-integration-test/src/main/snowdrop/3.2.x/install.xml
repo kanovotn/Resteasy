@@ -1,0 +1,81 @@
+<processor>
+	<remove>
+		<name>//s:extension[@module='org.jboss.snowdrop']</name>
+		<strict>false</strict>
+	</remove>
+	
+    <add>
+        <inside>//s:extensions</inside>
+        <value>
+            <![CDATA[
+                <extension module="org.jboss.snowdrop"/>
+                ]]>
+        </value>
+        <strict>false</strict>
+    </add>
+    
+    <remove>	
+		<name>//ss:subsystem</name>
+		<strict>false</strict>
+	</remove>
+    <add>
+        <inside>//s:profile</inside>
+        <value>
+            <![CDATA[
+                <subsystem xmlns="urn:jboss:domain:snowdrop:1.0"/>
+                ]]>
+        </value>
+        <strict>false</strict>
+    </add>
+
+    <remove>
+        <name>//s2:extension[@module='org.jboss.snowdrop']</name>
+        <strict>false</strict>
+    </remove>
+
+    <add>
+        <inside>//s2:extensions</inside>
+        <value>
+            <![CDATA[
+                <extension module="org.jboss.snowdrop"/>
+                ]]>
+        </value>
+        <strict>false</strict>
+    </add>
+
+    <add>
+        <inside>//s2:profile</inside>
+        <value>
+            <![CDATA[
+                <subsystem xmlns="urn:jboss:domain:snowdrop:1.0"/>
+                ]]>
+        </value>
+        <strict>false</strict>
+    </add>
+    
+    <remove>
+        <name>//s4:extension[@module='org.jboss.snowdrop']</name>
+        <strict>false</strict>
+    </remove>
+
+    <add>
+        <inside>//s4:extensions</inside>
+        <value>
+            <![CDATA[
+                <extension module="org.jboss.snowdrop"/>
+                ]]>
+        </value>
+        <strict>false</strict>
+    </add>
+
+    <add>
+        <inside>//s4:profile</inside>
+        <value>
+            <![CDATA[
+                <subsystem xmlns="urn:jboss:domain:snowdrop:1.0"/>
+                ]]>
+        </value>
+        <strict>false</strict>
+    </add>
+	
+</processor>

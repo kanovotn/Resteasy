@@ -1,0 +1,37 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="testService" class="org.jboss.resteasy.spring.aop.TestServiceImpl"/>
+
+	<bean id="adviceBean" class="org.jboss.resteasy.spring.aop.AdviceImpl" />
+
+	<bean id="testServiceJDKProxy"
+                class="org.springframework.aop.framework.ProxyFactoryBean">
+
+		<property name="target" ref="testService" />
+		<property name="proxyInterfaces" value="org.jboss.resteasy.spring.aop.TestService" />
+
+		<property name="interceptorNames">
+			<list>
+				<value>adviceBean</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="testServiceCGLIBProxy"
+                class="org.springframework.aop.framework.ProxyFactoryBean">
+
+		<property name="target" ref="testService" />
+		<property name="proxyTargetClass" value="true" />
+
+		<property name="interceptorNames">
+			<list>
+				<value>adviceBean</value>
+			</list>
+		</property>
+	</bean>
+
+
+</beans>
