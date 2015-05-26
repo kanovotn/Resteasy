@@ -42,6 +42,23 @@ public class ClientBuilderTest
 
    }
 
+   @Test
+   public void addAndRemovePropertyTest() throws Exception
+   {
+      String property = "prop";
+      Client client = ClientBuilder.newClient();
+      client.property(property, property);
+      Object p = client.getConfiguration().getProperty(property);
+      Assert.assertEquals("prop", (String)p);
+      try {
+         client.property(property, null);
+      } catch (NullPointerException e) {
+        Assert.fail("Couldn't remove property.");
+      }
+      p = client.getConfiguration().getProperty(property);
+      Assert.assertEquals(null, p);
+   }
+
    @Test(expected=IllegalStateException.class)
    public void closeClientSendRequestTest() throws Exception
    {
