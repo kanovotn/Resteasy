@@ -3,6 +3,7 @@ package org.jboss.resteasy.test.client;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.test.BaseResourceTest;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,6 +16,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.lang.annotation.ElementType;
@@ -77,17 +80,24 @@ public class SyncInvoketest extends BaseResourceTest
       }
    }
 
+   static Client client;
+
    @BeforeClass
    public static void setup() throws Exception
    {
+      client = ClientBuilder.newClient();
       addPerRequestResource(Resource.class);
+   }
+
+   @AfterClass
+   public static void close()
+   {
+      client.close();
    }
 
    @Test
    public void testMethods() throws Exception
    {
-      ResteasyClient client = new ResteasyClientBuilder().build();
-
       {
          Response res = client.target(generateURL("/test")).request().get();
          Assert.assertEquals(200, res.getStatus());
@@ -153,14 +163,11 @@ public class SyncInvoketest extends BaseResourceTest
          Assert.assertEquals("patch hello", entity);
 
       }
-      client.close();
    }
 
    @Test
    public void testInvoke() throws Exception
    {
-      ResteasyClient client = new ResteasyClientBuilder().build();
-
       {
          Response res = client.target(generateURL("/test")).request().buildGet().invoke();
          Assert.assertEquals(200, res.getStatus());
@@ -226,6 +233,5 @@ public class SyncInvoketest extends BaseResourceTest
          Assert.assertEquals("patch hello", entity);
 
       }
-      client.close();
    }
 }
