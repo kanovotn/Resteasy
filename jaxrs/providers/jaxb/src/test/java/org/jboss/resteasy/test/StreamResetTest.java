@@ -97,4 +97,28 @@ public class StreamResetTest extends BaseResourceTest
       Assert.assertEquals("bill", person.getName());
    }
 
+   @Test
+   public void test456WithoutResetStream() throws Exception
+   {
+      ClientRequest request = new ClientRequest(TestPortProvider.generateURL("/test"));
+      ClientResponse<Place> response = request.get(Place.class);
+      boolean exceptionThrown = false;
+      try
+      {
+         Place place = response.getEntity();
+
+      }
+      catch (Exception e)
+      {
+         exceptionThrown = true;
+      }
+      Assert.assertTrue(exceptionThrown);
+
+      //response.resetStream();
+
+      Person person = response.getEntity(Person.class);
+      Assert.assertNotNull(person);
+      Assert.assertEquals("bill", person.getName());
+   }
+
 }
