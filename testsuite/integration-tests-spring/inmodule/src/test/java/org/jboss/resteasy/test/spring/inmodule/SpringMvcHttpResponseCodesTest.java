@@ -42,7 +42,7 @@ import javax.ws.rs.core.Response;
  * @tpTestCaseDetails Tests various http response codes returned from the server
  * @tpSince RESTEasy 3.1.0
  */
-@ServerSetup({UsersRolesSecurityDomainSetupCreaper.class})
+//@ServerSetup({UsersRolesSecurityDomainSetupCreaper.class})
 @RunWith(Arquillian.class)
 @RunAsClient
 public class SpringMvcHttpResponseCodesTest {
@@ -54,9 +54,9 @@ public class SpringMvcHttpResponseCodesTest {
     private static Archive<?> deploy() {
         WebArchive war = TestUtil.prepareArchive(SpringMvcHttpResponseCodesTest.class.getSimpleName());
         war.addAsWebInfResource(SpringMvcHttpResponseCodesTest.class.getPackage(), "springMvcHttpResponseCodes/web-secure.xml", "web.xml");
-        war.addAsWebInfResource(SpringMvcHttpResponseCodesTest.class.getPackage(), "springMvcHttpResponseCodes/jboss-web.xml", "jboss-web.xml");
-        war.addAsResource(SpringMvcHttpResponseCodesTest.class.getPackage(), "springMvcHttpResponseCodes/roles.properties", "roles.properties");
-        war.addAsResource(SpringMvcHttpResponseCodesTest.class.getPackage(), "springMvcHttpResponseCodes/users.properties", "users.properties");
+        //war.addAsWebInfResource(SpringMvcHttpResponseCodesTest.class.getPackage(), "springMvcHttpResponseCodes/jboss-web.xml", "jboss-web.xml");
+       // war.addAsResource(SpringMvcHttpResponseCodesTest.class.getPackage(), "springMvcHttpResponseCodes/roles.properties", "roles.properties");
+        //war.addAsResource(SpringMvcHttpResponseCodesTest.class.getPackage(), "springMvcHttpResponseCodes/users.properties", "users.properties");
         war.addAsWebInfResource(SpringMvcHttpResponseCodesTest.class.getPackage(), "springMvcHttpResponseCodes/mvc-dispatcher-servlet.xml", "mvc-dispatcher-servlet.xml");
         war.addAsWebInfResource(SpringMvcHttpResponseCodesTest.class.getPackage(), "springMvcHttpResponseCodes/applicationContext.xml", "applicationContext.xml");
         war.addAsManifestResource(new StringAsset("Dependencies: org.springframework.spring meta-inf\n"), "MANIFEST.MF");

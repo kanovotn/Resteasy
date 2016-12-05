@@ -39,7 +39,7 @@ import java.util.Hashtable;
  * @tpTestCaseDetails Basic test for RESTEasy authentication.
  * @tpSince RESTEasy 3.0.16
  */
-@ServerSetup({UsersRolesSecurityDomainSetupCreaper.class})
+//@ServerSetup({UsersRolesSecurityDomainSetupCreaper.class})
 @RunWith(Arquillian.class)
 @RunAsClient
 public class BasicAuthTest {
@@ -90,9 +90,9 @@ public class BasicAuthTest {
         contextParams.put("resteasy.role.based.security", "true");
 
         war.addClass(BasicAuthBaseProxy.class)
-                .addAsResource(BasicAuthTest.class.getPackage(), "roles.properties", "/roles.properties")
-                .addAsResource(BasicAuthTest.class.getPackage(), "users.properties", "/users.properties")
-                .addAsWebInfResource(BasicAuthTest.class.getPackage(), "jboss-web.xml", "/jboss-web.xml")
+                //.addAsResource(BasicAuthTest.class.getPackage(), "application-roles.properties", "/application-roles.properties")
+                //.addAsResource(BasicAuthTest.class.getPackage(), "application-users.properties", "/application-users.properties")
+                //.addAsWebInfResource(BasicAuthTest.class.getPackage(), "jboss-web.xml", "/jboss-web.xml")
                 .addAsWebInfResource(BasicAuthTest.class.getPackage(), "web.xml", "/web.xml");
 
         return TestUtil.finishContainerPrepare(war, contextParams, BasicAuthBaseResource.class,

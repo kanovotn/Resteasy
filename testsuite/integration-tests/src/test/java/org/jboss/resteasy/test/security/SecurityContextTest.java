@@ -31,7 +31,7 @@ import java.io.IOException;
  * @tpTestCaseDetails Basic test for RESTEasy authentication using programmatic security with javax.ws.rs.core.SecurityContext
  * @tpSince RESTEasy 3.0.16
  */
-@ServerSetup({UsersRolesSecurityDomainSetupCreaper.class})
+//@ServerSetup({UsersRolesSecurityDomainSetupCreaper.class})
 @RunWith(Arquillian.class)
 @RunAsClient
 public class SecurityContextTest {
@@ -68,20 +68,20 @@ public class SecurityContextTest {
     @Deployment
     public static Archive<?> deploy() {
         WebArchive war = TestUtil.prepareArchive(SecurityContextTest.class.getSimpleName());
-        war.addAsResource(SecurityContextTest.class.getPackage(), "roles.properties", "roles.properties")
-                .addAsResource(SecurityContextTest.class.getPackage(), "users.properties", "users.properties")
-                .addAsWebInfResource(SecurityContextTest.class.getPackage(), "jboss-web.xml", "jboss-web.xml")
-                .addAsWebInfResource(SecurityContextTest.class.getPackage(), "securityContext/web.xml", "web.xml");
+        war.addAsWebInfResource(SecurityContextTest.class.getPackage(), "securityContext/web.xml", "web.xml");
+                //.addAsResource(SecurityContextTest.class.getPackage(), "roles.properties", "roles.properties")
+                //.addAsResource(SecurityContextTest.class.getPackage(), "users.properties", "users.properties")
+                //.addAsWebInfResource(SecurityContextTest.class.getPackage(), "jboss-web.xml", "jboss-web.xml")
         return TestUtil.finishContainerPrepare(war, null, SecurityContextResource.class);
     }
 
     @Deployment(name="containerRequestFilter")
     public static Archive<?> deploy2() {
         WebArchive war = TestUtil.prepareArchive(SecurityContextTest.class.getSimpleName() + "Filter");
-        war.addAsResource(SecurityContextTest.class.getPackage(), "roles.properties", "roles.properties")
-                .addAsResource(SecurityContextTest.class.getPackage(), "users.properties", "users.properties")
-                .addAsWebInfResource(SecurityContextTest.class.getPackage(), "jboss-web.xml", "jboss-web.xml")
-                .addAsWebInfResource(SecurityContextTest.class.getPackage(), "securityContext/web.xml", "web.xml");
+        war.addAsWebInfResource(SecurityContextTest.class.getPackage(), "securityContext/web.xml", "web.xml");
+                //.addAsResource(SecurityContextTest.class.getPackage(), "roles.properties", "roles.properties")
+                //.addAsResource(SecurityContextTest.class.getPackage(), "users.properties", "users.properties")
+                //.addAsWebInfResource(SecurityContextTest.class.getPackage(), "jboss-web.xml", "jboss-web.xml")
         return TestUtil.finishContainerPrepare(war, null, SecurityContextResource.class,
                 SecurityContextContainerRequestFilter.class);
     }
