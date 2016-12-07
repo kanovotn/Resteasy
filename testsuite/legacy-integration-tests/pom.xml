@@ -110,7 +110,7 @@
                   <providerSelection>2.0</providerSelection>
                   <source>${basedir}/src/test/scripts/legacy.groovy</source>
                   <properties>
-                    <inputFile>${jboss.home}/standalone/configuration/standalone-full.xml</inputFile>
+                    <inputFile>${jboss.home}/standalone/configuration/standalone-elytron.xml</inputFile>
                     <outputFile>${jboss.home}/standalone/configuration/standalone-resteasy-legacy.xml</outputFile>
                   </properties>
                 </configuration>
@@ -125,14 +125,13 @@
         
     </profiles>
 
-
     <dependencies>
         <!-- TODO Workaround dependency for arquillian to work with container using Remoting 5. Remove when updated version of
-        wildfly-arquillian-container-managed is available -->
+    wildfly-arquillian-container-managed is available -->
         <dependency>
             <groupId>org.wildfly.security</groupId>
             <artifactId>wildfly-elytron</artifactId>
-            <version>1.1.0.Beta13</version>
+            <version>1.1.0.Beta16</version>
         </dependency>
 
         <dependency>
