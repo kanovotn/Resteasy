@@ -46,7 +46,7 @@
         <version.org.eclipse.aether>1.1.0</version.org.eclipse.aether>
         <version.org.eclipse.jetty>9.2.13.v20150730</version.org.eclipse.jetty>
         <version.org.glassfish.javax.el>3.0.1-b08</version.org.glassfish.javax.el>
-        <version.org.hibernate.hibernate-validator>5.2.4.Final</version.org.hibernate.hibernate-validator>
+        <version.org.hibernate.hibernate-validator>5.3.4.Final</version.org.hibernate.hibernate-validator>
         <version.org.hibernate.javax.persistence.hibernate-jpa-2.1-api>1.0.0.Final</version.org.hibernate.javax.persistence.hibernate-jpa-2.1-api>
         <version.org.infinispan>8.2.4.Final</version.org.infinispan>
         <version.org.javassist>3.20.0-GA</version.org.javassist>
