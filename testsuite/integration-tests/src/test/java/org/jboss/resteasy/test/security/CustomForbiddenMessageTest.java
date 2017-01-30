@@ -34,7 +34,7 @@ import java.util.Hashtable;
  * @tpSubChapter Security
  * @tpChapter Integration tests
  * @tpTestCaseDetails Custom ExceptionMapper is used when Forbidden is thrown from RoleBasedSecurityFilter
- * @tpSince RESTEasy 3.1.0
+ * @tpSince RESTEasy 3.0.20
  */
 @ServerSetup({UsersRolesSecurityDomainSetupCreaper.class})
 @RunWith(Arquillian.class)
@@ -84,7 +84,7 @@ public class CustomForbiddenMessageTest {
 
     /**
      * @tpTestDetails Tests custom message from custom ExceptionMapper
-     * @tpSince RESTEasy 3.1.0
+     * @tpSince RESTEasy 3.0.20
      */
     @Test
     public void testCustomExceptionMapper() throws Exception {
