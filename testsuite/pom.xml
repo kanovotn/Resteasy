@@ -176,6 +176,7 @@
                 </plugins>
             </build>
         </profile>
+        <!-- This profile creates custom server configuration file with configured Elytron subsystem -->
         <profile>
             <id>elytron</id>
             <activation>
@@ -244,6 +245,40 @@
                                 <jboss.home>${jboss.home}</jboss.home>
                             </systemPropertyVariables>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- This profile enforces to define -Delytron property when -Dsecurity.domain=elytron is triggered -->
+        <profile>
+            <id>security.domain</id>
+            <activation>
+                <property>
+                    <name>security.domain</name>
+                    <value>elytron</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>enforce-property</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireProperty>
+                                            <property>elytron</property>
+                                            <message>You must set property '-Delytron' to the build in order to have all components for Elytron configured!</message>
+                                        </requireProperty>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>

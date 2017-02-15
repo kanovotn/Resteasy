@@ -13,7 +13,7 @@ import org.jboss.as.arquillian.api.ServerSetup;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
-import org.jboss.resteasy.setup.UsersRolesSecurityDomainSetupCreaper;
+import org.jboss.resteasy.setup.AbstractUsersRolesSecurityDomainSetup;
 import org.jboss.resteasy.test.security.resource.BasicAuthBaseProxy;
 import org.jboss.resteasy.test.security.resource.BasicAuthBaseResource;
 import org.jboss.resteasy.test.security.resource.BasicAuthBaseResourceAnybody;
@@ -31,6 +31,7 @@ import org.junit.runner.RunWith;
 
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.util.Hashtable;
 
 /**
@@ -39,7 +40,7 @@ import java.util.Hashtable;
  * @tpTestCaseDetails Basic test for RESTEasy authentication.
  * @tpSince RESTEasy 3.0.16
  */
-@ServerSetup({UsersRolesSecurityDomainSetupCreaper.class})
+@ServerSetup({BasicAuthTest.SecurityDomainSetup.class})
 @RunWith(Arquillian.class)
 @RunAsClient
 public class BasicAuthTest {
@@ -90,8 +91,6 @@ public class BasicAuthTest {
         contextParams.put("resteasy.role.based.security", "true");
 
         war.addClass(BasicAuthBaseProxy.class)
-                .addAsResource(BasicAuthTest.class.getPackage(), "roles.properties", "/roles.properties")
-                .addAsResource(BasicAuthTest.class.getPackage(), "users.properties", "/users.properties")
                 .addAsWebInfResource(BasicAuthTest.class.getPackage(), "jboss-web.xml", "/jboss-web.xml")
                 .addAsWebInfResource(BasicAuthTest.class.getPackage(), "web.xml", "/web.xml");
 
@@ -225,5 +224,14 @@ public class BasicAuthTest {
         Assert.assertEquals(HttpResponseCodes.SC_FORBIDDEN, response.getStatus());
         Assert.assertEquals(ACCESS_FORBIDDEN_MESSAGE, response.readEntity(String.class));
         authorizedClient.close();
+    }
+
+    static class SecurityDomainSetup extends AbstractUsersRolesSecurityDomainSetup {
+
+        @Override
+        public void setConfigurationPath() {
+            File propertiesPath = new File(BasicAuthTest.class.getResource("users.properties").getPath());
+            createPropertiesFiles(propertiesPath.getParent());
+        }
     }
 }

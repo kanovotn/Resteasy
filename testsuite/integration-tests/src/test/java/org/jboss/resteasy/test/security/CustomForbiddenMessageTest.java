@@ -14,7 +14,7 @@ import org.jboss.resteasy.category.NotForForwardCompatibility;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
-import org.jboss.resteasy.setup.UsersRolesSecurityDomainSetupCreaper;
+import org.jboss.resteasy.setup.AbstractUsersRolesSecurityDomainSetup;
 import org.jboss.resteasy.test.security.resource.BasicAuthBaseResource;
 import org.jboss.resteasy.test.security.resource.CustomForbiddenMessageExceptionMapper;
 import org.jboss.resteasy.util.HttpResponseCodes;
@@ -30,6 +30,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.util.Hashtable;
 
 /**
@@ -38,7 +39,7 @@ import java.util.Hashtable;
  * @tpTestCaseDetails Custom ExceptionMapper is used when Forbidden is thrown from RoleBasedSecurityFilter, see RESTEASY-1342
  * @tpSince RESTEasy 3.0.21.Final
  */
-@ServerSetup({UsersRolesSecurityDomainSetupCreaper.class})
+@ServerSetup({CustomForbiddenMessageTest.SecurityDomainSetup.class})
 @RunWith(Arquillian.class)
 @RunAsClient
 @Category({NotForForwardCompatibility.class})
@@ -55,9 +56,7 @@ public class CustomForbiddenMessageTest {
         Hashtable<String, String> contextParams = new Hashtable<String, String>();
         contextParams.put("resteasy.role.based.security", "true");
 
-        war.addAsResource(BasicAuthTest.class.getPackage(), "roles.properties", "/roles.properties")
-                .addAsResource(BasicAuthTest.class.getPackage(), "users.properties", "/users.properties")
-                .addAsWebInfResource(BasicAuthTest.class.getPackage(), "jboss-web.xml", "/jboss-web.xml")
+        war.addAsWebInfResource(BasicAuthTest.class.getPackage(), "jboss-web.xml", "/jboss-web.xml")
                 .addAsWebInfResource(BasicAuthTest.class.getPackage(), "web.xml", "/web.xml");
 
         return TestUtil.finishContainerPrepare(war, contextParams, BasicAuthBaseResource.class, CustomForbiddenMessageExceptionMapper.class);
@@ -94,5 +93,14 @@ public class CustomForbiddenMessageTest {
         Response response = authorizedClient.target(generateURL("/secured/deny")).request().get();
         Assert.assertEquals(HttpResponseCodes.SC_FORBIDDEN, response.getStatus());
         Assert.assertEquals(ACCESS_FORBIDDEN_MESSAGE, response.readEntity(String.class));
+    }
+
+    static class SecurityDomainSetup extends AbstractUsersRolesSecurityDomainSetup {
+
+        @Override
+        public void setConfigurationPath() {
+            File propertiesPath = new File(BasicAuthTest.class.getResource("users.properties").getPath());
+            createPropertiesFiles(propertiesPath.getParent());
+        }
     }
 }
