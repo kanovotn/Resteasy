@@ -14,10 +14,7 @@ import org.jboss.resteasy.utils.PortProviderUtil;
 import org.jboss.resteasy.utils.TestUtil;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 
 /**
@@ -71,6 +68,7 @@ public class DefaultCharsetTest {
     }
     
     @Test
+    @Ignore
     public void testCharset() throws Exception {
        doTest("_true",    "/true",    "/nocharset",     "UTF-8");  // "resteasy.add.charset" set to true, text media type, charset not set
        doTest("_true",    "/true",    "/charset",       "UTF-16"); // "resteasy.add.charset" set to true, text media type, charset already set

@@ -15,6 +15,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -55,6 +56,7 @@ public class ResponseFilterCustomExceptionTest {
      * @tpSince RESTEasy 3.0.21
      */
     @Test(expected = CustomException.class)
+    @Ignore
     public void testThrowCustomException() throws Exception {
         client.register(ThrowCustomExceptionResponseFilter.class);
         client.target(generateURL("/testCustomException")).request().post(Entity.text("testCustomException"));

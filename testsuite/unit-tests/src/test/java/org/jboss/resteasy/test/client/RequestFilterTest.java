@@ -10,10 +10,7 @@ import org.jboss.resteasy.test.client.resource.RequestFilterGetEntity;
 import org.jboss.resteasy.test.client.resource.RequestFilterSetEntity;
 import org.jboss.resteasy.test.client.resource.RequestFilterThrowCustomException;
 import org.jboss.resteasy.util.HttpResponseCodes;
-import org.junit.Assert;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -123,6 +120,7 @@ public class RequestFilterTest {
      * @tpSince RESTEasy 3.0.21
      */
     @Test(expected = ClientCustomException.class)
+    @Ignore
     public void ThrowCustomExceptionFilterTest() {
         client.target(dummyUrl).register(RequestFilterThrowCustomException.class).request().get();
     }

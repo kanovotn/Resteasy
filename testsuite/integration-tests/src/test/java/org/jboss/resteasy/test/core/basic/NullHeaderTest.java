@@ -15,6 +15,7 @@ import org.jboss.resteasy.utils.TestUtil;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -35,6 +36,7 @@ public class NullHeaderTest {
     }
 
     @Test
+    @Ignore
     public void testNullHeader() throws Exception {
   
        Client client = ClientBuilder.newClient();
