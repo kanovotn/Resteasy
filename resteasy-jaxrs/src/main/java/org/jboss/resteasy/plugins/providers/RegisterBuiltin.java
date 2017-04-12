@@ -1,6 +1,5 @@
 package org.jboss.resteasy.plugins.providers;
 
-import org.jboss.resteasy.core.ThreadLocalResteasyProviderFactory;
 import org.jboss.resteasy.resteasy_jaxrs.i18n.LogMessages;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
@@ -25,13 +24,9 @@ public class RegisterBuiltin
 
    public static void register(ResteasyProviderFactory factory)
    {
-      final ResteasyProviderFactory monitor = (factory instanceof ThreadLocalResteasyProviderFactory)
-            ? ((ThreadLocalResteasyProviderFactory) factory).getDelegate()
-            : factory;
-      synchronized (monitor)
+      synchronized (factory)
       {
-         if (factory.isBuiltinsRegistered() || !factory.isRegisterBuiltins())
-            return;
+         if (factory.isBuiltinsRegistered() || !factory.isRegisterBuiltins()) return;
          try
          {
             registerProviders(factory);
