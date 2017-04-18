@@ -10,6 +10,7 @@ import org.jboss.resteasy.test.validation.resource.ContextProvidersName;
 import org.jboss.resteasy.test.validation.resource.ContextProvidersResource;
 import org.jboss.resteasy.test.validation.resource.ContextProvidersXop;
 import org.jboss.resteasy.util.HttpResponseCodes;
+import org.jboss.resteasy.utils.PermissionUtil;
 import org.jboss.resteasy.utils.PortProviderUtil;
 import org.jboss.resteasy.utils.TestUtil;
 import org.jboss.shrinkwrap.api.Archive;
@@ -23,7 +24,9 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import java.io.FilePermission;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ReflectPermission;
 import java.lang.reflect.Type;
 
 /**
@@ -42,6 +45,7 @@ public class ContextProvidersNewClientTest extends ContextProvidersTestBase {
                         ContextProvidersName.class, ContextProvidersXop.class)
                 .addClass(ContextProvidersTestBase.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+
         return TestUtil.finishContainerPrepare(war, null, ContextProvidersResource.class);
     }
 
