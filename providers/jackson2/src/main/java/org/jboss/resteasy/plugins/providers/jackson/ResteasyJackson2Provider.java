@@ -30,11 +30,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -239,19 +243,22 @@ public class ResteasyJackson2Provider extends JacksonJaxbJsonProvider
          if (System.getSecurityManager() == null) {
             writer.writeValue(jg, value);
          } else {
-            final ObjectWriter smWriter = writer;
+            final JsonGenerator smJg = jg;
             final Object smValue = value;
-            AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
-               @Override
-               public Object run() throws Exception {
-
-                  smWriter.writeValue(jg, smValue);
-                  return null;
-               }
-            });
+            final ObjectWriter smWriter = writer;
+            try {
+               AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
+                  @Override
+                  public Object run() throws Exception {
+                     smWriter.writeValue(smJg, smValue);
+                     return null;
+                  }
+               });
+            } catch (PrivilegedActionException pae) {
+               pae.printStackTrace();
+            }
          }
-      } catch(PrivilegedActionException pae) {
-         throw new IOException(pae);
+
       } finally {
          jg.close();
       }
