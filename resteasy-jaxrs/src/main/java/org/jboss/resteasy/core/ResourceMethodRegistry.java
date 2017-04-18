@@ -3,7 +3,7 @@ package org.jboss.resteasy.core;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-
+import org.jboss.resteasy.resteasy_jaxrs.i18n.LogMessages;
 import org.jboss.resteasy.core.registry.RootClassNode;
 import org.jboss.resteasy.core.registry.RootNode;
 import org.jboss.resteasy.plugins.server.resourcefactory.JndiResourceFactory;
@@ -261,7 +261,7 @@ public class ResourceMethodRegistry implements Registry
             });
          }
       } catch (PrivilegedActionException pae) {
-
+         LogMessages.LOGGER.error(pae);
       }
       return methodList;
    }

@@ -1,5 +1,8 @@
 package org.jboss.resteasy.spi.metadata;
 
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import org.jboss.resteasy.annotations.Body;
 import org.jboss.resteasy.annotations.Form;
 import org.jboss.resteasy.annotations.Query;
@@ -1003,7 +1006,7 @@ public class ResourceBuilder
       } while (root != null && !root.equals(Object.class));
    }
 
-   protected void processDeclaredFields(ResourceClassBuilder resourceClassBuilder, final Class<?> root)
+   protected static void processDeclaredFields(ResourceClassBuilder resourceClassBuilder, final Class<?> root)
    {
       Field[] fieldList = new Field[0];
       try {
@@ -1018,7 +1021,7 @@ public class ResourceBuilder
             });
          }
       } catch (PrivilegedActionException pae) {
-
+         LogMessages.LOGGER.error(pae.getMessage());
       }
 
       for (Field field : fieldList)
@@ -1029,7 +1032,8 @@ public class ResourceBuilder
          builder.buildField();
       }
    }
-   protected void processDeclaredSetters(ResourceClassBuilder resourceClassBuilder, final Class<?> root, Set<Long> visitedHashes)
+
+   protected static void processDeclaredSetters(ResourceClassBuilder resourceClassBuilder, final Class<?> root, Set<Long> visitedHashes)
    {
       Method[] methodList = new Method[0];
       try {
@@ -1044,7 +1048,7 @@ public class ResourceBuilder
             });
          }
       } catch (PrivilegedActionException pae) {
-
+         LogMessages.LOGGER.error(pae.getMessage());
       }
 
       for (Method method : methodList)
@@ -1116,7 +1120,7 @@ public class ResourceBuilder
          resourceLocatorBuilder.buildMethod();
       }
    }
-
+   
    /**
     * Apply the list of {@link ResourceClassProcessor} to the supplied {@link ResourceClass}.
     */
@@ -1132,5 +1136,4 @@ public class ResourceBuilder
       }
       return current;
    }
-
 }

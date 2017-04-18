@@ -448,7 +448,7 @@ public class GeneralValidatorImpl implements GeneralValidatorCDI
             });
          }
       } catch (PrivilegedActionException pae) {
-
+         throw new ResteasyViolationException(pae.getMessage());
       }
 
       for (int i = 0; i < methods.length; i++)
@@ -525,7 +525,7 @@ public class GeneralValidatorImpl implements GeneralValidatorCDI
             });
          }
       } catch (PrivilegedActionException pae) {
-
+         throw new ResteasyViolationException(pae.getMessage());
       }
 
       // The ClassMate doc says that overridden methods are flattened to one

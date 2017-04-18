@@ -99,7 +99,7 @@ public abstract class AbstractJAXBContextFinder implements JAXBContextFinder
       return packageName;
    }
 
-   public static Class<?> findDefaultObjectFactoryClass(Class<?> type)
+   public static Class<?> findDefaultObjectFactoryClass(Class<?> type) throws PrivilegedActionException
    {
       XmlType typeAnnotation = type.getAnnotation(XmlType.class);
       if (typeAnnotation == null) return null;
@@ -115,17 +115,25 @@ public abstract class AbstractJAXBContextFinder implements JAXBContextFinder
          }
          else
          {
+            final String  smB = b.toString();
             factoryClass = AccessController.doPrivileged(new PrivilegedExceptionAction<Class<?>>()
             {
                @Override
-               public Class<?> run() throws ClassNotFoundException
+               public Class<?> run() throws Exception
                {
-                  return Thread.currentThread().getContextClassLoader().loadClass(b.toString());
+                  return Thread.currentThread().getContextClassLoader().loadClass(smB);
                }
             });
          }
       }
-      catch (PrivilegedActionException | ClassNotFoundException e)
+      catch (PrivilegedActionException pae) {
+         if (pae.getException() instanceof ClassNotFoundException) {
+            return null;
+         } else {
+            throw pae;
+         }
+      }
+      catch (ClassNotFoundException e)
       {
          return null;
       }
@@ -165,10 +173,15 @@ public abstract class AbstractJAXBContextFinder implements JAXBContextFinder
 				if (type == null)
 					continue;
 				classes1.add(type);
-               Class<?> factory = findDefaultObjectFactoryClass(type);
-               if (factory != null)
-                  classes1.add(factory);
-            }
+               try {
+                  Class<?> factory = findDefaultObjectFactoryClass(type);
+                  if (factory != null)
+                     classes1.add(factory);
+               } catch (PrivilegedActionException pae)
+               {
+                  throw new JAXBException(pae);
+               }
+			}
 		}
 		Class<?>[] classArray = classes1.toArray(new Class[classes1.size()]);
 		return createContextObject(parameterAnnotations, classArray);

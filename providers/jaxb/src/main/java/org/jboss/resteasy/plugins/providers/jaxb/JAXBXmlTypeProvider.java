@@ -238,6 +238,10 @@ public class JAXBXmlTypeProvider extends AbstractJAXBProvider<Object>
       {
          throw new JAXBMarshalException(e);
       }
+      catch (PrivilegedActionException pae)
+      {
+         throw new JAXBMarshalException(pae);
+      }
 
    }
 
@@ -254,7 +258,7 @@ public class JAXBXmlTypeProvider extends AbstractJAXBProvider<Object>
       try
       {
          final Object factory = findObjectFactory(type);
-         Method[] method;
+         Method[] method = new Method[0];
          if (System.getSecurityManager() == null)
          {
             method = factory.getClass().getDeclaredMethods();

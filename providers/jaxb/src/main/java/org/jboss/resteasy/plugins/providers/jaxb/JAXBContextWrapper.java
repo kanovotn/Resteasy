@@ -70,9 +70,12 @@ public class JAXBContextWrapper extends JAXBContext
 
          mapperConstructor = mapper[0].getConstructors()[0];
       }
-      catch (ClassNotFoundException | PrivilegedActionException e)
+      catch (ClassNotFoundException e)
       {
-
+         LogMessages.LOGGER.error(e);
+      }
+      catch (PrivilegedActionException pae) {
+         LogMessages.LOGGER.error(pae);
       }
 
    }
@@ -127,7 +130,7 @@ public class JAXBContextWrapper extends JAXBContext
       }
       catch (PrivilegedActionException paex)
       {
-         throw new JAXBException(paex.getMessage());
+         throw new JAXBException(paex.getMessage(),paex);
       }
    }
 

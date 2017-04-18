@@ -30,6 +30,8 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Map;
 
@@ -258,4 +260,5 @@ public class InjectorFactoryImpl implements InjectorFactory
          return null;
       }
    }
+
 }
