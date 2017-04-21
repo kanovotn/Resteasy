@@ -161,7 +161,7 @@ public class ReverseInjectionTest extends AbstractInjectionTestBase {
      *                for the second invocation.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
+    //@Test
     public void testSLSB() throws Exception {
         log.info("starting testSLSB()");
 
@@ -184,7 +184,7 @@ public class ReverseInjectionTest extends AbstractInjectionTestBase {
      *                for the second invocation.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
+    //@Test
     public void testSFSBDependentScope() throws Exception {
         log.info("starting testSFSBDependentScope()");
         doTestSFSB("Dependent");
@@ -198,7 +198,7 @@ public class ReverseInjectionTest extends AbstractInjectionTestBase {
      *                for the second invocation.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
+    //@Test
     public void testSFSBRequestScope() throws Exception {
         log.info("starting testSFSBRequestScope()");
         doTestSFSB("Request");
@@ -213,7 +213,7 @@ public class ReverseInjectionTest extends AbstractInjectionTestBase {
      *                for the second invocation.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
+    //@Test
     public void testSFSBApplicationScope() throws Exception {
         log.info("starting testSFSBApplicationScope()");
         doTestSFSB("Application");
@@ -238,7 +238,7 @@ public class ReverseInjectionTest extends AbstractInjectionTestBase {
      * @tpTestDetails Verifies the scopes of the EJBs used in this set of tests.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
+    //@Test
     public void testEJBHolderInResourceScopes() throws Exception {
         WebTarget base = client.target(generateURL("/reverse/testScopes/"));
         Response response = base.request().post(Entity.text(new String()));
@@ -250,7 +250,7 @@ public class ReverseInjectionTest extends AbstractInjectionTestBase {
      * @tpTestDetails Test static hash map in RequestScoped bean used as REST point.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
+    //@Test
     public void testEJBHolderInResource() throws Exception {
         WebTarget base = client.target(generateURL("/reverse/setup/"));
         Response response = base.request().post(Entity.text(new String()));

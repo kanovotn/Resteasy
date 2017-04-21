@@ -32,6 +32,11 @@
                         <jboss.home>${jboss.home}</jboss.home>
                     </systemPropertyVariables>
                     <excludedGroups>org.jboss.resteasy.category.ExpectedFailing,${additional.surefire.excluded.groups}</excludedGroups>
+                    <excludes>
+                        <exclude>**/MDBInjectionTest.java</exclude>
+                        <exclude>**/ReverseInjectionTest.java</exclude>
+                        <exclude>**/InjectionTest.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
