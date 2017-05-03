@@ -21,6 +21,12 @@ import org.junit.runner.RunWith;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,12 +91,12 @@ public class XxeSecureProcessingTest {
         return deploy(null);
     }
 
-    @Deployment(name = T_TRUE)
+    //@Deployment(name = T_TRUE)
     public static Archive<?> deployTrue() {
         return deploy("true");
     }
 
-    @Deployment(name = T_FALSE)
+    //@Deployment(name = T_FALSE)
     public static Archive<?> deployFalse() {
         return deploy("false");
     }
@@ -99,7 +105,7 @@ public class XxeSecureProcessingTest {
      * @tpTestDetails Small request in XML root element. "resteasy.document.expand.entity.references" property is not set.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
+  //  @Test
     public void testXmlRootElementDefaultSmall() throws Exception {
         Response response = client.target(PortProviderUtil.generateURL("/xmlRootElement", null)).request().post(Entity.entity(small, "application/xml"));
         Assert.assertEquals(200, response.getStatus());
@@ -113,7 +119,7 @@ public class XxeSecureProcessingTest {
      * @tpTestDetails Big request in XML root element. "resteasy.document.expand.entity.references" property is not set.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
+   // @Test
     public void testXmlRootElementDefaultBig() throws Exception {
         Response response = client.target(PortProviderUtil.generateURL("/xmlRootElement", null)).request().post(Entity.entity(big, "application/xml"));
         Assert.assertEquals(400, response.getStatus());
@@ -127,7 +133,7 @@ public class XxeSecureProcessingTest {
      * @tpTestDetails Small request in XML root element. "resteasy.document.expand.entity.references" property is set to false.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
+   // @Test
     public void testXmlRootElementWithoutExternalExpansionSmall() throws Exception {
         Response response = client.target(PortProviderUtil.generateURL("/xmlRootElement", T_FALSE)).request()
                 .post(Entity.entity(small, "application/xml"));
@@ -142,7 +148,7 @@ public class XxeSecureProcessingTest {
      * @tpTestDetails Big request in XML root element. "resteasy.document.expand.entity.references" property is set to false.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
+   // @Test
     public void testXmlRootElementWithoutExternalExpansionBig() throws Exception {
         Response response = client.target(PortProviderUtil.generateURL("/xmlRootElement", T_FALSE)).request()
                 .post(Entity.entity(big, "application/xml"));
@@ -157,7 +163,7 @@ public class XxeSecureProcessingTest {
      * @tpTestDetails Small request in XML root element. "resteasy.document.expand.entity.references" property is set to true.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
+   // @Test
     public void testXmlRootElementWithExternalExpansionSmall() throws Exception {
         Response response = client.target(PortProviderUtil.generateURL("/xmlRootElement", T_TRUE)).request()
                 .post(Entity.entity(small, "application/xml"));
@@ -172,7 +178,7 @@ public class XxeSecureProcessingTest {
      * @tpTestDetails Big request in XML root element. "resteasy.document.expand.entity.references" property is set to true.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
+   // @Test
     public void testXmlRootElementWithExternalExpansionBig() throws Exception {
         Response response = client.target(PortProviderUtil.generateURL("/xmlRootElement", T_TRUE)).request()
                 .post(Entity.entity(big, "application/xml"));
@@ -180,6 +186,18 @@ public class XxeSecureProcessingTest {
         String entity = response.readEntity(String.class);
         logger.debug("Result: " + entity);
         Assert.assertTrue(entity.contains("javax.xml.bind.UnmarshalException"));
+        response.close();
+    }
+
+    @Test
+    public void testSourceWithInputStream() throws Exception {
+        //Source xmlInput=new StreamSource(new StringReader(small));
+        InputStream stream = new ByteArrayInputStream(small.getBytes(StandardCharsets.UTF_8));
+        Response response = client.target(PortProviderUtil.generateURL("/test", T_DEFAULT)).request()
+                .post(Entity.entity(new StreamSource(stream), "application/*+xml"));
+        Assert.assertEquals(400, response.getStatus());
+        String entity = response.readEntity(String.class);
+        logger.debug("Result: " + entity);
         response.close();
     }
 
