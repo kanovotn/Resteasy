@@ -1,8 +1,6 @@
 package org.jboss.resteasy.test.providers.multipart;
 
-import java.io.FilePermission;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.ReflectPermission;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.LoggingPermission;
 
 import javax.enterprise.util.AnnotationLiteral;
 import javax.ws.rs.client.Client;
@@ -46,7 +43,6 @@ import org.jboss.resteasy.test.providers.multipart.resource.ContextProvidersName
 import org.jboss.resteasy.test.providers.multipart.resource.ContextProvidersResource;
 import org.jboss.resteasy.test.providers.multipart.resource.ContextProvidersXop;
 import org.jboss.resteasy.util.HttpResponseCodes;
-import org.jboss.resteasy.utils.PermissionUtil;
 import org.jboss.resteasy.utils.PortProviderUtil;
 import org.jboss.resteasy.utils.TestUtil;
 import org.jboss.shrinkwrap.api.Archive;

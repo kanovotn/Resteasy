@@ -46,28 +46,26 @@ public class JAXBContextWrapper extends JAXBContext
    {
       try
       {
-         // check to see if NamespacePrefixMapper is in classpath
-         final Class[] namespace = new Class[1];
-         final Class[] mapper = new Class[1];
+         Class mapper = null;
 
          if (System.getSecurityManager() == null)
          {
-            namespace[0] =  JAXBContextWrapper.class.getClassLoader().loadClass("com.sun.xml.bind.marshaller.NamespacePrefixMapper");
-            mapper[0] =  JAXBContextWrapper.class.getClassLoader().loadClass("org.jboss.resteasy.plugins.providers.jaxb.XmlNamespacePrefixMapper");
+            // check to see if NamespacePrefixMapper is in classpath
+            Class namespace =  JAXBContextWrapper.class.getClassLoader().loadClass("com.sun.xml.bind.marshaller.NamespacePrefixMapper");
+            mapper =  JAXBContextWrapper.class.getClassLoader().loadClass("org.jboss.resteasy.plugins.providers.jaxb.XmlNamespacePrefixMapper");
          }
          else
          {
-            AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
-               @Override public Void run() throws Exception {
-                  namespace[0] =  JAXBContextWrapper.class.getClassLoader().loadClass("com.sun.xml.bind.marshaller.NamespacePrefixMapper");
-                  mapper[0] =  JAXBContextWrapper.class.getClassLoader().loadClass("org.jboss.resteasy.plugins.providers.jaxb.XmlNamespacePrefixMapper");
-
-                  return null;
+            mapper = AccessController.doPrivileged(new PrivilegedExceptionAction<Class>() {
+               @Override public Class run() throws Exception {
+                  // check to see if NamespacePrefixMapper is in classpath
+                  Class namespace =  JAXBContextWrapper.class.getClassLoader().loadClass("com.sun.xml.bind.marshaller.NamespacePrefixMapper");
+                  return JAXBContextWrapper.class.getClassLoader().loadClass("org.jboss.resteasy.plugins.providers.jaxb.XmlNamespacePrefixMapper");
                }
             });
          }
 
-         mapperConstructor = mapper[0].getConstructors()[0];
+         mapperConstructor = mapper.getConstructors()[0];
       }
       catch (ClassNotFoundException e)
       {

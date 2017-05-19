@@ -11,7 +11,6 @@ import org.jboss.resteasy.test.validation.resource.ContextProvidersName;
 import org.jboss.resteasy.test.validation.resource.ContextProvidersResource;
 import org.jboss.resteasy.test.validation.resource.ContextProvidersXop;
 import org.jboss.resteasy.util.HttpResponseCodes;
-import org.jboss.resteasy.utils.PermissionUtil;
 import org.jboss.resteasy.utils.PortProviderUtil;
 import org.jboss.resteasy.utils.TestUtil;
 import org.jboss.shrinkwrap.api.Archive;
@@ -21,11 +20,8 @@ import org.junit.Assert;
 import org.junit.runner.RunWith;
 
 import javax.ws.rs.core.MediaType;
-import java.io.FilePermission;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.ReflectPermission;
 import java.lang.reflect.Type;
-import java.util.logging.LoggingPermission;
 
 /**
  * @tpSubChapter Multipart provider
