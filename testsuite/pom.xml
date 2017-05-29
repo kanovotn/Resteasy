@@ -37,6 +37,11 @@
                         <project.version>${project.version}</project.version>
                     </systemPropertyVariables>
                     <excludedGroups>org.jboss.resteasy.category.ExpectedFailing,${additional.surefire.excluded.groups}</excludedGroups>
+                    <excludes>
+                        <exclude>**/MDBInjectionTest.java</exclude>
+                        <exclude>**/ReverseInjectionTest.java</exclude>
+                        <exclude>**/InjectionTest.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -160,7 +165,6 @@
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <argLine>${surefireArgLine}</argLine>
                             <testFailureIgnore>true</testFailureIgnore>
                             <systemPropertyVariables>
                                 <additionalJvmArgs>${securityManagerArg}</additionalJvmArgs>

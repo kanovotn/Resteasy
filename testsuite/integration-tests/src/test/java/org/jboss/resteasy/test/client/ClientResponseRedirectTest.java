@@ -130,7 +130,9 @@ public class ClientResponseRedirectTest extends ClientTestBase{
         for (Object name : headers.keySet()) {
             logger.info(name + ":" + headers.getFirst(name.toString()));
         }
-        Assert.assertTrue(headers.getFirst("location").toString().equalsIgnoreCase(generateURL("/redirect/data")));
+        logger.info("Local url: " + generateURL("/redirect/data"));
+        logger.info("Local url with portProvider: " + PortProviderUtil.generateURL("/redirect/data", ClientResponseRedirectTest.class.getSimpleName()));
+        Assert.assertTrue(headers.getFirst("location").toString().equalsIgnoreCase(PortProviderUtil.generateURL("/redirect/data", ClientResponseRedirectTest.class.getSimpleName())));
     }
 
     @SuppressWarnings(value = "unchecked")
@@ -140,7 +142,9 @@ public class ClientResponseRedirectTest extends ClientTestBase{
         for (Object name : headers.keySet()) {
             logger.info(name + ":" + headers.getFirst(name.toString()));
         }
-        Assert.assertTrue(headers.getFirst("location").toString().equalsIgnoreCase(generateURL("/redirect/data")));
+        logger.info("Local url: " + generateURL("/redirect/data"));
+        logger.info("Local url with portProvider: " + PortProviderUtil.generateURL("/redirect/data", ClientResponseRedirectTest.class.getSimpleName()));
+        Assert.assertTrue(headers.getFirst("location").toString().equalsIgnoreCase(PortProviderUtil.generateURL("/redirect/data", ClientResponseRedirectTest.class.getSimpleName())));
     }
 
 }
