@@ -47,14 +47,28 @@ public class DataSourceProvider extends AbstractEntityProvider<DataSource>
       private final String type;
 
       protected SequencedDataSource(byte[] byteBuffer, int byteBufferOffset,
-                                 int byteBufferLength, File tempFile, String type)
-      {
+                                 int byteBufferLength, File tempFile, String type) throws IOException {
          super();
          this.byteBuffer = byteBuffer;
          this.byteBufferOffset = byteBufferOffset;
          this.byteBufferLength = byteBufferLength;
          this.tempFile = tempFile;
          this.type = type;
+         initializeInputStream();
+      }
+
+      private InputStream initializeInputStream() throws IOException {
+         InputStream bis = new ByteArrayInputStream(byteBuffer, byteBufferOffset, byteBufferLength);
+         if (tempFile == null)
+            return bis;
+         InputStream fis = new FileInputStream(tempFile);
+         CleanableSequenceInputStream csis = new CleanableSequenceInputStream(bis, fis, tempFile);
+         Cleanables cleanables = ResteasyProviderFactory.getContextData(Cleanables.class);
+         if (cleanables != null)
+         {
+            cleanables.addCleanable(csis);
+         }
+         return csis;
       }
 
       @Override
@@ -66,17 +80,7 @@ public class DataSourceProvider extends AbstractEntityProvider<DataSource>
       @Override
       public InputStream getInputStream() throws IOException
       {
-         InputStream bis = new ByteArrayInputStream(byteBuffer, byteBufferOffset, byteBufferLength);
-         if (tempFile == null)
-            return bis;
-         InputStream fis = new FileInputStream(tempFile);
-         CleanableSequenceInputStream csis = new CleanableSequenceInputStream(bis, fis, tempFile);
-         Cleanables cleanables = ResteasyProviderFactory.getContextData(Cleanables.class);
-         if (cleanables != null)
-         {
-             cleanables.addCleanable(csis);
-         }
-         return csis;
+         return initializeInputStream();
       }
 
       @Override
