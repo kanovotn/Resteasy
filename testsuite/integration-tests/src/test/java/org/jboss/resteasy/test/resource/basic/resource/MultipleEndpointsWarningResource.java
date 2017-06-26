@@ -2,11 +2,7 @@ package org.jboss.resteasy.test.resource.basic.resource;
 
 import java.util.logging.LogManager;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 
 import org.jboss.resteasy.resteasy_jaxrs.i18n.LogMessages;
 
@@ -44,6 +40,20 @@ public class MultipleEndpointsWarningResource {
    public int getVerb() throws Exception {
       return logHandler.getMessagesLogged();
    }
+
+  /* @Path("verbs/{isbn}")
+   @GET
+   @Produces("text/plain")
+   public int getVerb2(@QueryParam("isbn") String isbn) throws Exception {
+      return logHandler.getMessagesLogged();
+   }
+
+   @Path("{isbn}")
+   @GET
+   @Produces("text/plain")
+   public int getVerb3(@QueryParam("isbn") Integer isbn) throws Exception {
+      return logHandler.getMessagesLogged();
+   }*/
 
    @Path("verbs")
    @POST
