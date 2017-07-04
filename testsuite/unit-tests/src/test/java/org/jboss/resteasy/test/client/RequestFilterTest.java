@@ -15,6 +15,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -122,7 +123,8 @@ public class RequestFilterTest {
      * @tpPassCrit Expected Exception is thrown from the Client
      * @tpSince RESTEasy 3.0.21
      */
-    @Test(expected = ClientCustomException.class)
+    //@Test(expected = ClientCustomException.class)
+    @Test(expected = ProcessingException.class)
     public void ThrowCustomExceptionFilterTest() {
         client.target(dummyUrl).register(RequestFilterThrowCustomException.class).request().get();
     }
