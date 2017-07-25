@@ -105,8 +105,8 @@ public class AddSpringResteasyAsResourceRootTest {
      * @tpPassCrit The application is successfully deployed, resource is available, and Spring classes are on the path.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
-    @OperateOnDeployment("dep2")
+  //  @Test
+  //  @OperateOnDeployment("dep2")
     public void testDeploymentWithSpringContextLoaderListenerAddsResourceRoot() throws Exception {
         deploymentName = deploymentWithSpringContextLoaderListenerSpringIncluded;
 
@@ -115,7 +115,7 @@ public class AddSpringResteasyAsResourceRootTest {
         Assert.assertTrue("Resteasy Spring classes are not available in deployment", resteasySpringClassesAreAvailableToDeployment(deploymentName));
     }
 
-    @Deployment(name = "dep2")
+  //  @Deployment(name = "dep2")
     private static Archive<?> createDeploymentWithSpringContextLoaderListener() {
         WebArchive archive = ShrinkWrap.create(WebArchive.class, deploymentWithSpringContextLoaderListenerSpringIncluded + ".war")
                 .addClass(TestResource.class)
@@ -140,8 +140,8 @@ public class AddSpringResteasyAsResourceRootTest {
      * @tpPassCrit The application is successfully deployed, resource is available, and Spring classes are on the path.
      * @tpSince RESTEasy 3.0.16
      */
-    @Test
-    @OperateOnDeployment("dep1")
+   // @Test
+   // @OperateOnDeployment("dep1")
     public void testDeploymentWithoutSpringMvcDispatcherOrListenerDoesNotAddResourceRoot() throws Exception {
         deploymentName = deploymentWithoutSpringMvcDispatcherOrListenerSpringIncluded;
 
@@ -151,7 +151,7 @@ public class AddSpringResteasyAsResourceRootTest {
                 resteasySpringClassesAreAvailableToDeployment(deploymentName));
     }
 
-    @Deployment(name = "dep1")
+ ///   @Deployment(name = "dep1")
     private static Archive<?> createDeploymentWithoutSpringMvcDispatcherOrListener() {
         WebArchive archive = TestUtil.prepareArchive(deploymentWithoutSpringMvcDispatcherOrListenerSpringIncluded);
         archive.addAsWebInfResource(AddSpringResteasyAsResourceRootTest.class.getPackage(), "web-no-mvc-no-listener.xml", "web.xml")
