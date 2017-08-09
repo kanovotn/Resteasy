@@ -1,6 +1,7 @@
 package org.jboss.resteasy.test.response.resource;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
@@ -11,5 +12,11 @@ public class ResponseHeaderResource {
    @Produces("text/plain")
    public String get() {
       throw new ResponseHeaderExceptionMapperRuntimeException();
+   }
+
+   @POST
+   @Path("empty")
+   public void empty() {
+      System.out.println("ahoj");
    }
 }

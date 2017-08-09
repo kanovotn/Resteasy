@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -48,7 +49,7 @@ public class ResponseHeaderTest {
     * from custom exception mapper. Using Resteasy client.
     * @tpSince RESTEasy 3.0.23
     */
-   @Test
+   //@Test
    public void testMapperWithResteasyClient() throws Exception {
       ResteasyClient client = new ResteasyClientBuilder().build();
       WebTarget base = client.target(PortProviderUtil.generateURL("/test",
@@ -71,6 +72,16 @@ public class ResponseHeaderTest {
          Assert.fail("Expected header data value to be of type ArrayList.  It was not.");
       }
 
+      response.close();
+      client.close();
+   }
+
+   @Test
+   public void test() throws Exception {
+      ResteasyClient client = new ResteasyClientBuilder().build();
+      WebTarget base = client.target(PortProviderUtil.generateURL("/test/empty",
+              ResponseHeaderTest.class.getSimpleName()));
+      Response response = base.request().post(Entity.text(new String()));
       response.close();
       client.close();
    }
