@@ -255,11 +255,13 @@ public class InjectorFactoryImpl implements InjectorFactory
             }
             else
             {
+             //  final Class sType = type;
                typeClassLoader = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>()
                {
                   @Override
                   public ClassLoader run()
                   {
+               //      return sType.getClassLoader();
                      return type.getClassLoader();
                   }
                });
