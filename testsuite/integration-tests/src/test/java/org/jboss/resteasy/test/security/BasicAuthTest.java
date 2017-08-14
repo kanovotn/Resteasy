@@ -157,7 +157,6 @@ public class BasicAuthTest {
         {
             Response response = authorizedClient.target(generateURL("/secured/deny")).request().get();
             Assert.assertEquals(HttpResponseCodes.SC_FORBIDDEN, response.getStatus());
-            Assert.assertEquals(WRONG_RESPONSE, ACCESS_FORBIDDEN_MESSAGE, response.readEntity(String.class));
         }
         {
             Response response = authorizedClient.target(generateURL("/secured3/authorized")).request().get();
@@ -169,7 +168,6 @@ public class BasicAuthTest {
         {
             Response response = unauthorizedClient.target(generateURL("/secured3/authorized")).request().get();
             Assert.assertEquals(HttpResponseCodes.SC_FORBIDDEN, response.getStatus());
-            Assert.assertEquals(WRONG_RESPONSE, ACCESS_FORBIDDEN_MESSAGE, response.readEntity(String.class));
         }
         {
             Response response = unauthorizedClient.target(generateURL("/secured3/anybody")).request().get();
@@ -210,16 +208,15 @@ public class BasicAuthTest {
         {
             Response response = unauthorizedClient.target(generateURL("/secured/authorized")).request().get();
             Assert.assertEquals(HttpResponseCodes.SC_FORBIDDEN, response.getStatus());
-            Assert.assertEquals(ACCESS_FORBIDDEN_MESSAGE, response.readEntity(String.class));
         }
     }
 
     /**
-     * @tpTestDetails Regression test for JBEAP-1589, RESTEASY-1249
+     * @tpTestDetails Regression test for JBEAP-1589, RESTEASY-1249, RESTEASY-1342
      * @tpSince RESTEasy 3.0.16
      */
     @Test
-    public void testAccesForbiddenMessage() throws Exception {
+    public void testAccesForbidden() throws Exception {
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("bill", "password1");
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(new AuthScope(AuthScope.ANY), credentials);
@@ -229,7 +226,6 @@ public class BasicAuthTest {
         ResteasyClient authorizedClient = new ResteasyClientBuilder().httpEngine(engine).build();
         Response response = authorizedClient.target(generateURL("/secured/deny")).request().get();
         Assert.assertEquals(HttpResponseCodes.SC_FORBIDDEN, response.getStatus());
-        Assert.assertEquals(ACCESS_FORBIDDEN_MESSAGE, response.readEntity(String.class));
         authorizedClient.close();
     }
 
@@ -242,8 +238,7 @@ public class BasicAuthTest {
     public void testContentTypeWithForbiddenMessage() {
         Response response = unauthorizedClient.target(generateURL("/secured/denyWithContentType")).request().get();
         Assert.assertEquals(HttpResponseCodes.SC_FORBIDDEN, response.getStatus());
-        Assert.assertEquals("Incorrect Content-type header", "text/html;charset=UTF-8", response.getHeaderString("Content-type"));
-        Assert.assertEquals("Missing forbidden message in the response", ACCESS_FORBIDDEN_MESSAGE, response.readEntity(String.class));
+        Assert.assertEquals("Incorrect Content-type header", null, response.getHeaderString("Content-type"));
     }
 
     /**

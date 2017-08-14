@@ -50,7 +50,7 @@ public class CustomForbiddenMessageTest {
 
     private static ResteasyClient authorizedClient;
 
-    private static final String ACCESS_FORBIDDEN_MESSAGE = "My custom message from CustomForbiddenMessageExceptionMapper: Access forbidden: role not allowed";
+    private static final String ACCESS_FORBIDDEN_MESSAGE = "My custom message from CustomForbiddenMessageExceptionMapper";
 
     @Deployment
     public static Archive<?> deploy() {

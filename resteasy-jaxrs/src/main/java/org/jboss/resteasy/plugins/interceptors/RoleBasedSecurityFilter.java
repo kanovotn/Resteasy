@@ -1,5 +1,6 @@
 package org.jboss.resteasy.plugins.interceptors;
 
+import org.jboss.resteasy.resteasy_jaxrs.i18n.Messages;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import javax.annotation.Priority;
@@ -34,7 +35,7 @@ public class RoleBasedSecurityFilter implements ContainerRequestFilter
    {
       if (denyAll) 
       {
-         throw new ForbiddenException(Response.status(403).entity("Access forbidden: role not allowed").type("text/html;charset=UTF-8").build());
+         throw new ForbiddenException(Messages.MESSAGES.roleNotAllowed());
       }
       if (permitAll) return;
       if (rolesAllowed != null)
@@ -46,7 +47,7 @@ public class RoleBasedSecurityFilter implements ContainerRequestFilter
             {
                if (context.isUserInRole(role)) return;
             }
-            throw new ForbiddenException(Response.status(403).entity("Access forbidden: role not allowed").type("text/html;charset=UTF-8").build());
+            throw new ForbiddenException(Messages.MESSAGES.roleNotAllowed());
          }
       }
       return;

@@ -16,7 +16,6 @@ public class CustomForbiddenMessageExceptionMapper implements ExceptionMapper<Fo
     @Override
     public Response toResponse(ForbiddenException e) {
         log.info("Entering exception mapper");
-        String entity = (String) e.getResponse().getEntity();
-        return Response.status(403).header("Content-Type", "text/plain").entity("My custom message from CustomForbiddenMessageExceptionMapper: " + entity).build();
+        return Response.status(403).header("Content-Type", "text/plain").entity("My custom message from CustomForbiddenMessageExceptionMapper").build();
     }
 }

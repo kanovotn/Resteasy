@@ -525,6 +525,9 @@ public interface Messages
    
    @Message(id = BASE + 770, value = "Response is committed, can't handle exception")
    String responseIsCommitted();
+
+   @Message(id = BASE + 771, value = "Role not allowed")
+   String roleNotAllowed();
    
    @Message(id = BASE + 775, value = "schemeSpecificPart was null")
    String schemeSpecificPartNull();
