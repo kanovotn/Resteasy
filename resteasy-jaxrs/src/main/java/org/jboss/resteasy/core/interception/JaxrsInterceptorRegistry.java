@@ -437,13 +437,7 @@ public class JaxrsInterceptorRegistry<T>
       logger.info("createArray,beforeSort: The size of the matches is " + matches.size());
       sort(matches);
       logger.info("createArray,afterSort: The size of the matches is " + matches.size());
-      try {
-        array = (T[]) Array.newInstance(intf, matches.size());
-      } catch (IllegalArgumentException ex) {
-         logger.info("Couldn't create array: " + ex.getCause().getStackTrace());
-      } catch (NullPointerException ex) {
-         logger.info("Couldn't create array: " + ex.getCause().getStackTrace());
-      }
+      array = (T[]) Array.newInstance(intf, matches.size());
       logger.info("createArray, intf: " + intf.getClass().getSimpleName());
       logger.info("createArray: The size of the array is " + array.length);
       logger.info("createArray: The size of the array with Array.getLength(array) is : " + Array.getLength(array));
