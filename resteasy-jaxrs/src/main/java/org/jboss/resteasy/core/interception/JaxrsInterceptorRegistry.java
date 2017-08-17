@@ -1,5 +1,6 @@
 package org.jboss.resteasy.core.interception;
 
+import org.jboss.logging.Logger;
 import org.jboss.resteasy.resteasy_jaxrs.i18n.Messages;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.jboss.resteasy.spi.interception.AcceptedByMethod;
@@ -27,6 +28,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @SuppressWarnings("unchecked")
 public class JaxrsInterceptorRegistry<T>
 {
+   private static Logger logger = Logger.getLogger(JaxrsInterceptorRegistry.class);
+
    public static class Match
    {
       public Match(Object interceptor, int order)
@@ -429,10 +432,16 @@ public class JaxrsInterceptorRegistry<T>
 
    private T[] createArray(List<Match> matches)
    {
+      logger.info("createArray,beforeSort: The size of the matches is " + matches.size());
       sort(matches);
+      logger.info("createArray,afterSort: The size of the matches is " + matches.size());
       T[] array = (T[]) Array.newInstance(intf, matches.size());
+      //logger.info("createArray, intf: " + intf.getClass().getSimpleName());
+      logger.info("createArray: The size of the array is " + array.length);
+      //logger.info("createArray: The size of the array with Array.getLength(array) is : " + Array.getLength(array));
       for (int i = 0; i < array.length; i++)
       {
+         logger.info("createArray: looking for matches index " + i + ". The size of matches is : " + matches.size());
          array[i] = (T) matches.get(i).interceptor;
       }
       return array;
