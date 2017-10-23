@@ -23,104 +23,74 @@ import java.lang.reflect.Proxy;
  * @version $Revision: 1 $
  */
 @SuppressWarnings("unchecked")
-public class ContextParameterInjector implements ValueInjector
-{
-   private Class type;
-   private Class proxy;
-   private ResteasyProviderFactory factory;
+public class ContextParameterInjector implements ValueInjector {
+    private Class type;
+    private Class proxy;
+    private ResteasyProviderFactory factory;
 
-   public ContextParameterInjector(Class proxy, Class type, ResteasyProviderFactory factory)
-   {
-      this.type = type;
-      this.proxy = proxy;
-      this.factory = factory;
-   }
+    public ContextParameterInjector(final Class proxy, final Class type, final ResteasyProviderFactory factory) {
+        this.type = type;
+        this.proxy = proxy;
+        this.factory = factory;
+    }
 
-   public Object inject(HttpRequest request, HttpResponse response)
-   {
-      // we always inject a proxy for interface types just in case the per-request target is a pooled object
-      // i.e. in the case of an SLSB
-      if (type.equals(Providers.class)) return factory;
-      if (!type.isInterface() || type.equals(SseEventSink.class))
-      {
-         return ResteasyProviderFactory.getContextData(type);
-      }
-      else if (type.equals(Sse.class))
-      {
-         return new SseImpl();
-      }
-      return createProxy();
-   }
+    public Object inject(HttpRequest request, HttpResponse response) {
+        // we always inject a proxy for interface types just in case the per-request target is a pooled object
+        // i.e. in the case of an SLSB
+        if (type.equals(Providers.class)) return factory;
+        if (!type.isInterface() || type.equals(SseEventSink.class)) {
+            return ResteasyProviderFactory.getContextData(type);
+        } else if (type.equals(Sse.class)) {
+            return new SseImpl();
+        }
+        return createProxy();
+    }
 
-   private class GenericDelegatingProxy implements InvocationHandler
-   {
-      public Object invoke(Object o, Method method, Object[] objects) throws Throwable
-      {
-         try
-         {
-            Object delegate = ResteasyProviderFactory.getContextData(type);
-            if (delegate == null)
-            {
-               String name = method.getName();
-               if (o instanceof ResourceInfo && ("getResourceMethod".equals(name) || "getResourceClass".equals(name)))
-               {
-                  return null;
-               }
-               throw new LoggableFailure(Messages.MESSAGES.unableToFindContextualData(type.getName()));
-            }
-            return method.invoke(delegate, objects);
-         }
-         catch (IllegalAccessException e)
-         {
-            throw new RuntimeException(e);
-         }
-         catch (IllegalArgumentException e)
-         {
-            throw new RuntimeException(e);
-         }
-         catch (InvocationTargetException e)
-         {
-            throw e.getCause();
-         }
-      }
-   }
-
-   public Object inject()
-   {
-      //if (type.equals(Providers.class)) return factory;
-      if (type.equals(Application.class) || type.equals(SseEventSink.class))
-      {
-         return ResteasyProviderFactory.getContextData(type);
-      }
-      else if (type.equals(Sse.class))
-      {
-         return new SseImpl();
-      }
-      else if (!type.isInterface())
-      {
-         Object delegate = ResteasyProviderFactory.getContextData(type);
-         if (delegate != null) return delegate;
-         throw new RuntimeException(Messages.MESSAGES.illegalToInjectNonInterfaceType());
-      }
-
-      return createProxy();
-   }
-
-    protected Object createProxy()
-    {
-        if (proxy != null)
-        {
-            try
-            {
-                return proxy.getConstructors()[0].newInstance(new GenericDelegatingProxy());
-            }
-            catch (Exception e)
-            {
+    private class GenericDelegatingProxy implements InvocationHandler {
+        public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+            try {
+                Object delegate = ResteasyProviderFactory.getContextData(type);
+                if (delegate == null) {
+                    String name = method.getName();
+                    if (o instanceof ResourceInfo && ("getResourceMethod".equals(name) || "getResourceClass".equals(name))) {
+                        return null;
+                    }
+                    throw new LoggableFailure(Messages.MESSAGES.unableToFindContextualData(type.getName()));
+                }
+                return method.invoke(delegate, objects);
+            } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw e.getCause();
             }
         }
-        else
-        {
+    }
+
+    public Object inject() {
+        //if (type.equals(Providers.class)) return factory;
+        if (type.equals(Application.class) || type.equals(SseEventSink.class)) {
+            return ResteasyProviderFactory.getContextData(type);
+        } else if (type.equals(Sse.class)) {
+            return new SseImpl();
+        } else if (!type.isInterface()) {
+            Object delegate = ResteasyProviderFactory.getContextData(type);
+            if (delegate != null) return delegate;
+            throw new RuntimeException(Messages.MESSAGES.illegalToInjectNonInterfaceType());
+        }
+
+        return createProxy();
+    }
+
+    protected Object createProxy() {
+        if (proxy != null) {
+            try {
+                return proxy.getConstructors()[0].newInstance(new GenericDelegatingProxy());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
             Class[] intfs = {type};
             return Proxy.newProxyInstance(type.getClassLoader(), intfs, new GenericDelegatingProxy());
         }
