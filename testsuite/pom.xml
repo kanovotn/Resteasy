@@ -22,6 +22,7 @@
         <sources.path></sources.path>
         <jacoco.agent></jacoco.agent>
         <additionalJvmArgs></additionalJvmArgs>
+        <ee8.preview.mode>true</ee8.preview.mode>
     </properties>
 
     <build>
@@ -75,6 +76,29 @@
                 <module>microprofile-tck</module>
             </modules>
         </profile>
+        <profile>
+            <id>jaxrs20</id>
+            <activation>
+                <property>
+                    <name>jaxrs20</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <argLine>${surefireArgLine}</argLine>
+                            <skipTests>false</skipTests>
+                            <systemPropertyVariables>
+                                <ee8.preview.mode>false</ee8.preview.mode>
+                            </systemPropertyVariables>
+                            <excludedGroups>org.jboss.resteasy.category.Jaxrs21</excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <!-- Forward compatibility: use EAP 7.0.0.GA and newer Client from CP stream (e.g. client from RESTEasy delivered by EAP 7.0.2 -->
         <profile>
             <id>forward.compatibility</id>
@@ -86,7 +110,6 @@
             <modules>
                 <module>arquillian-utils</module>
                 <module>unit-tests</module>
-                <!-- Uncomment module below when EAP/Widlfly with Resteasy 3.1 is released -->
                 <module>integration-tests</module>
                 <module>integration-tests-spring</module>
             </modules>
