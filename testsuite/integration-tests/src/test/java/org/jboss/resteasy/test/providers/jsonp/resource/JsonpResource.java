@@ -3,8 +3,8 @@ package org.jboss.resteasy.test.providers.jsonp.resource;
 import org.junit.Assert;
 
 import javax.json.JsonArray;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
-import javax.json.JsonString;
 import javax.json.JsonStructure;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -57,6 +57,15 @@ public class JsonpResource {
         Assert.assertEquals("The value of field 'name' didn't propagated correctly from the request",
                 obj.getJsonString("name").getString(), "Bill");
         return obj;
+    }
+
+    @Path("number")
+    @POST
+    @Produces("application/json")
+    @Consumes("application/json")
+    public JsonNumber object(JsonNumber number) {
+        Assert.assertEquals(number.intValue(), Integer.parseInt("10001"));
+        return number;
     }
     
 }

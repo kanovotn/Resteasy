@@ -17,13 +17,17 @@ import org.junit.runner.RunWith;
 
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonStructure;
+import javax.json.stream.JsonParser;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import java.io.StringReader;
+import java.math.BigDecimal;
 
 /**
  * @tpSubChapter Json-p provider
@@ -158,5 +162,14 @@ public class JsonpTest {
         Assert.assertTrue("JsonObject from the response doesn't contain field 'name'", obj.containsKey("name"));
         Assert.assertEquals("JsonObject from the response doesn't contain correct value for the field 'name'",
                 obj.getJsonString("name").getString(), "Bill");
+    }
+
+    @Test
+    public void testNumber() throws Exception {
+        WebTarget target = client.target(generateURL("/test/json/number"));
+        JsonObject obj = Json.createObjectBuilder().add("name", "Bill").add("id", 10001).build();
+        JsonNumber jsonNumber = obj.getJsonNumber("id");
+        JsonNumber jsonNumberRes = target.request().post(Entity.json(jsonNumber), JsonNumber.class);
+        Assert.assertEquals(jsonNumber.intValue(), jsonNumberRes.intValue());
     }
 }
