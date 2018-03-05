@@ -43,6 +43,7 @@ import org.jboss.resteasy.spi.interception.MessageBodyReaderInterceptor;
 import org.jboss.resteasy.spi.interception.MessageBodyWriterInterceptor;
 import org.jboss.resteasy.spi.interception.PostProcessInterceptor;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
+import org.jboss.resteasy.spi.metadata.ResourceBuilder;
 import org.jboss.resteasy.util.FeatureContextDelegate;
 import org.jboss.resteasy.util.PickConstructor;
 import org.jboss.resteasy.util.ThreadLocalStack;
@@ -283,6 +284,8 @@ public class ResteasyProviderFactory extends RuntimeDelegate implements Provider
    protected Set<Class<?>> featureClasses;
    protected Set<Object> featureInstances;
 
+   protected ResourceBuilder resourceBuilder;
+
 
    public ResteasyProviderFactory()
    {
@@ -374,6 +377,7 @@ public class ResteasyProviderFactory extends RuntimeDelegate implements Provider
       clientExecutionInterceptorRegistry = new InterceptorRegistry<ClientExecutionInterceptor>(ClientExecutionInterceptor.class, this);
 
       clientErrorInterceptors = new CopyOnWriteArrayList<ClientErrorInterceptor>();
+      resourceBuilder = new ResourceBuilder();
 
       builtinsRegistered = false;
       registerBuiltins = true;
@@ -3064,5 +3068,9 @@ public class ResteasyProviderFactory extends RuntimeDelegate implements Provider
    public Link.Builder createLinkBuilder()
    {
       return new LinkBuilderImpl();
+   }
+
+   public ResourceBuilder getResourceBuilder() {
+      return resourceBuilder;
    }
 }

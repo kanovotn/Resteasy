@@ -16,6 +16,7 @@ import org.jboss.resteasy.links.RESTServiceDiscovery;
 import org.jboss.resteasy.links.RESTServiceDiscovery.AtomLink;
 import org.jboss.resteasy.plugins.server.netty.NettyJaxrsServer;
 import org.jboss.resteasy.plugins.server.resourcefactory.POJOResourceFactory;
+import org.jboss.resteasy.spi.metadata.ResourceBuilder;
 import org.jboss.resteasy.test.TestPortProvider;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -37,7 +38,8 @@ public class TestLinkIds
       server.setRootResourcePath("/");
       server.start();
       dispatcher = server.getDeployment().getDispatcher();
-      POJOResourceFactory noDefaults = new POJOResourceFactory(IDServiceTestBean.class);
+		ResourceBuilder resourceBuilder = new ResourceBuilder();
+		POJOResourceFactory noDefaults = new POJOResourceFactory(resourceBuilder, IDServiceTestBean.class);
       dispatcher.getRegistry().addResourceFactory(noDefaults);
       httpClient = new DefaultHttpClient();
       ApacheHttpClient4Engine engine = new ApacheHttpClient4Engine(httpClient);
