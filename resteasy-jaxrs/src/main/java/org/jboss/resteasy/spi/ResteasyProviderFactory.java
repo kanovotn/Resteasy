@@ -44,6 +44,7 @@ import org.jboss.resteasy.spi.interception.MessageBodyWriterInterceptor;
 import org.jboss.resteasy.spi.interception.PostProcessInterceptor;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 import org.jboss.resteasy.spi.metadata.ResourceBuilder;
+import org.jboss.resteasy.spi.metadata.ResourceClassProcessor;
 import org.jboss.resteasy.util.FeatureContextDelegate;
 import org.jboss.resteasy.util.PickConstructor;
 import org.jboss.resteasy.util.ThreadLocalStack;
@@ -2083,6 +2084,11 @@ public class ResteasyProviderFactory extends RuntimeDelegate implements Provider
       }
       providerClasses.add(provider);
       getClassContracts().put(provider, newContracts);
+
+      if (isA(provider, ResourceClassProcessor.class, contracts))
+      {
+         addResourceClassProcessor(provider);
+      }
    }
 
    /**
@@ -2477,6 +2483,11 @@ public class ResteasyProviderFactory extends RuntimeDelegate implements Provider
       }
       providerInstances.add(provider);
       getClassContracts().put(provider.getClass(), newContracts);
+
+      if (isA(provider, ResourceClassProcessor.class, contracts))
+      {
+         addResourceClassProcessor((ResourceClassProcessor) provider);
+      }
    }
 
    @Override
@@ -3068,6 +3079,17 @@ public class ResteasyProviderFactory extends RuntimeDelegate implements Provider
    public Link.Builder createLinkBuilder()
    {
       return new LinkBuilderImpl();
+   }
+
+   protected void addResourceClassProcessor(Class<ResourceClassProcessor> processorClass)
+   {
+      ResourceClassProcessor processor = createProviderInstance(processorClass);
+      addResourceClassProcessor(processor);
+   }
+
+   protected void addResourceClassProcessor(ResourceClassProcessor processor)
+   {
+      resourceBuilder.registerResourceClassProcessor(processor);
    }
 
    public ResourceBuilder getResourceBuilder() {
