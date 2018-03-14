@@ -113,7 +113,7 @@ public class UriInfoTest
       }
    }
 
-   @Test
+ /*  @Test
    public void testUriInfoWithSingleton() throws Exception
    {
       dispatcher = EmbeddedContainer.start().getDispatcher();
@@ -127,7 +127,7 @@ public class UriInfoTest
          EmbeddedContainer.stop();
       }
 
-   }
+   }*/
 
    @Test
    public void testUriInfo() throws Exception
