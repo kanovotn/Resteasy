@@ -57,7 +57,7 @@ public class SseBroadcastTest {
      * @tpInfo RESTEASY-1680
      * @tpSince RESTEasy 3.5.0
      */
-    @Test
+   // @Test
     public void testBroadcasterMultipleSinks() throws Exception {
         final CountDownLatch latch = new CountDownLatch(3);
         final AtomicInteger errors = new AtomicInteger(0);
@@ -124,7 +124,7 @@ public class SseBroadcastTest {
      * @tpInfo RESTEASY-1680
      * @tpSince RESTEasy 3.5.0
      */
-    @Test
+   // @Test
     public void testBroadcasterOnCloseCallbackCloseBroadsCasterOnServer() throws Exception {
         final CountDownLatch latch = new CountDownLatch(1);
         final AtomicInteger errors = new AtomicInteger(0);
@@ -166,7 +166,7 @@ public class SseBroadcastTest {
      * @tpSince RESTEasy 3.5.0
      */
     @Test
-    @Category(ExpectedFailing.class) // RESTEASY-1819
+    //@Category(ExpectedFailing.class) // RESTEASY-1819
     public void testBroadcasterOnCloseCallbackCloseSinkOnServer() throws Exception {
         final CountDownLatch latch = new CountDownLatch(1);
         final AtomicInteger errors = new AtomicInteger(0);
@@ -174,7 +174,6 @@ public class SseBroadcastTest {
         WebTarget target = client.target(generateURL("/broadcast/subscribe"));
 
         SseEventSource msgEventSource = SseEventSource.target(target).build();
-
         try (SseEventSource eventSource = msgEventSource) {
             eventSource.register(event -> {
                 Assert.assertTrue("Unexpected sever sent event data", textMessage.equals(event.readData()));
@@ -195,7 +194,9 @@ public class SseBroadcastTest {
 
         Client checkClient = new ResteasyClientBuilder().build();
         boolean onCloseCalled = checkClient.target(generateURL("/broadcast/onCloseCalled")).request().get(boolean.class);
-        Assert.assertTrue(onCloseCalled);
+        Assert.assertTrue("It was expected, that a broadcaster will call onClose()", onCloseCalled);
+        boolean onErrorCalled = checkClient.target(generateURL("/broadcast/onErrorCalled")).request().get(boolean.class);
+        Assert.assertFalse("It wasn't expected, that a broadcaster will call onError()", onErrorCalled);
         checkClient.close();
         removeBroadcaster();
     }
@@ -207,7 +208,7 @@ public class SseBroadcastTest {
      * @tpSince RESTEasy 3.5.0
      */
     @Test
-    @Category(ExpectedFailing.class) // RESTEASY-1819
+    //@Category(ExpectedFailing.class) // RESTEASY-1819
     public void testBroadcasterOnCloseCallbackCloseClientConnection() throws Exception {
         final CountDownLatch latch = new CountDownLatch(1);
         final AtomicInteger errors = new AtomicInteger(0);
@@ -237,7 +238,9 @@ public class SseBroadcastTest {
         Thread.sleep(5000);
         Client checkClient = new ResteasyClientBuilder().build();
         boolean onCloseCalled = checkClient.target(generateURL("/broadcast/onCloseCalled")).request().get(boolean.class);
-        Assert.assertTrue(onCloseCalled);
+        Assert.assertTrue("It was expected, that a broadcaster will call onClose()", onCloseCalled);
+        boolean onErrorCalled = checkClient.target(generateURL("/broadcast/onErrorCalled")).request().get(boolean.class);
+        Assert.assertFalse("It wasn't expected, that a broadcaster will call onError()", onErrorCalled);
         checkClient.close();
         removeBroadcaster();
     }

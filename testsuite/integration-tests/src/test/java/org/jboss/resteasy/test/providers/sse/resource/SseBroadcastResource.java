@@ -25,6 +25,7 @@ public class SseBroadcastResource {
     private volatile SseBroadcaster sseBroadcaster;
     private volatile boolean onErrorCalled = false;
     private volatile boolean onCloseCalled = false;
+    private volatile SseEventSink eventSink;
 
     private final static Logger logger = Logger.getLogger(SseBroadcastResource.class);
 
@@ -45,6 +46,7 @@ public class SseBroadcastResource {
             }
         }
         sseBroadcaster.register(sink);
+        this.eventSink = sink;
         logger.info("Sink registered");
     }
 
@@ -60,13 +62,15 @@ public class SseBroadcastResource {
     @POST
     @Path("/startAndClose")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    public void broadcastAndClose(String message, @Context Sse sse, @Context SseEventSink sseEventSink) throws IOException {
+    public void broadcastAndClose(String message, @Context Sse sse, @Context SseEventSink sseEventSink) throws IOException, InterruptedException {
         if (this.sseBroadcaster == null) {
             throw new IllegalStateException("No Sse broadcaster created.");
         }
-        this.sseBroadcaster.broadcast(sse.newEvent(message)).thenAccept((Object obj) -> {
-            sseEventSink.close();
-        });
+
+        this.sseBroadcaster.broadcast(sse.newEvent(message));
+        Thread.sleep(3000);
+        this.eventSink.close();
+
     }
 
     @GET
