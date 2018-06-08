@@ -1,5 +1,9 @@
 package org.jboss.resteasy.test.rx;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
@@ -8,6 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.client.CompletionStageRxInvoker;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
@@ -17,14 +22,12 @@ import javax.ws.rs.core.Response;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.dmr.ModelNode;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.internal.CompletionStageRxInvokerProvider;
-import org.jboss.resteasy.test.rx.resource.RxScheduledExecutorService;
-import org.jboss.resteasy.test.rx.resource.TestException;
-import org.jboss.resteasy.test.rx.resource.TestExceptionMapper;
-import org.jboss.resteasy.test.rx.resource.Thing;
-import org.jboss.resteasy.test.rx.resource.SimpleResourceImpl;
+import org.jboss.resteasy.test.rx.resource.*;
+import org.jboss.resteasy.util.HttpResponseCodes;
 import org.jboss.resteasy.utils.PortProviderUtil;
 import org.jboss.resteasy.utils.TestUtil;
 import org.jboss.shrinkwrap.api.Archive;
@@ -36,6 +39,10 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 
 /**
@@ -51,6 +58,9 @@ import org.junit.runner.RunWith;
 public class RxCompletionStageClientAsyncTest {
 
    private static ResteasyClient client;
+
+   private static ModelNode origDisallowedMethodsValue;
+   private static Address address = Address.subsystem("undertow").and("server", "default-server").and("http-listener", "default");
 
    private static List<Thing>  xThingList =  new ArrayList<Thing>();
    private static List<Thing>  aThingList =  new ArrayList<Thing>();
@@ -70,7 +80,7 @@ public class RxCompletionStageClientAsyncTest {
       war.addClass(TestException.class);
       war.setManifest(new StringAsset("Manifest-Version: 1.0\n"
          + "Dependencies: org.jboss.resteasy.resteasy-rxjava services, org.jboss.resteasy.resteasy-json-binding-provider services\n"));
-      return TestUtil.finishContainerPrepare(war, null, SimpleResourceImpl.class, TestExceptionMapper.class);
+      return TestUtil.finishContainerPrepare(war, null, SimpleResourceImpl.class, TestExceptionMapper.class, TRACE.class);
    }
 
    private static String generateURL(String path) {
@@ -81,10 +91,32 @@ public class RxCompletionStageClientAsyncTest {
    @BeforeClass
    public static void beforeClass() throws Exception {
       client = new ResteasyClientBuilder().build();
+      OnlineManagementClient client = TestUtil.clientInit();
+      Administration admin = new Administration(client);
+      Operations ops = new Operations(client);
+
+      // get original 'disallowed methods' value
+      origDisallowedMethodsValue = ops.readAttribute(address, "disallowed-methods").value();
+      // set 'disallowed methods' to empty list to allow TRACE
+      ops.writeAttribute(address, "disallowed-methods", new ModelNode().setEmptyList());
+
+      // reload server
+      admin.reload();
+      client.close();
    }
 
    @AfterClass
    public static void after() throws Exception {
+      client.close();
+      OnlineManagementClient client = TestUtil.clientInit();
+      Administration admin = new Administration(client);
+      Operations ops = new Operations(client);
+
+      // write original 'disallowed methods' value
+      ops.writeAttribute(address, "disallowed-methods", origDisallowedMethodsValue);
+
+      // reload server
+      admin.reload();
       client.close();
    }
 
@@ -211,11 +243,15 @@ public class RxCompletionStageClientAsyncTest {
    }
 
    @Test
-   @Ignore // TRACE is disabled by default in Wildfly
+   //@Ignore // TRACE is disabled by default in Wildfly
    public void testTrace() throws Exception {
       CompletionStageRxInvoker invoker = client.target(generateURL("/trace/string")).request().rx(CompletionStageRxInvoker.class);
       CompletionStage<Response> completionStage = invoker.trace();
+      //CompletionStage<Response> completionStage = invoker.method("TRACE");
+      //Response response = client.target(generateURL("/trace")).request().trace(Response.class);
+      //Assert.assertEquals(HttpResponseCodes.SC_OK, response.getStatus());
       Assert.assertEquals("x", completionStage.toCompletableFuture().get().readEntity(String.class));
+     // Assert.assertEquals("x", response.readEntity(String.class));
    }
 
    @Test

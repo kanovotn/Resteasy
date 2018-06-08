@@ -129,6 +129,13 @@ public class SimpleResourceImpl {
       return buildThingList("x", 3);
    }
 
+   @TRACE
+   @Path("trace")
+   public String trace() {
+      //logger.info("uriInfo.request: " + uriInfo.getRequestUri().toString());
+      return "x";
+   }
+
    @GET
    @Path("exception/unhandled")
    public Thing exceptionUnhandled() throws Exception {
