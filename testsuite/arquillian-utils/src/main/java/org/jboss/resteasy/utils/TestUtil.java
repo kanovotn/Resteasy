@@ -287,6 +287,7 @@ public class TestUtil {
 
     public static List<String> readServerLogLines(boolean onServer) {
         String jbossHome = TestUtil.getJbossHome(onServer);
+        System.out.println("JBOSS_HOME? " + jbossHome);
         String logPath = String.format("%s%sstandalone%slog%sserver.log", jbossHome,
                 (jbossHome.endsWith(File.separator) || jbossHome.endsWith("/")) ? "" : File.separator,
                 File.separator, File.separator);

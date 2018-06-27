@@ -271,6 +271,7 @@
                                 <node>127.0.0.1</node>
                                 <jboss.home>${jboss.home}</jboss.home>
                                 <project.version>${project.version}</project.version>
+                                <version.resteasy.testsuite>${version.resteasy.testsuite}</version.resteasy.testsuite>
                             </systemPropertyVariables>
                         </configuration>
                     </plugin>
